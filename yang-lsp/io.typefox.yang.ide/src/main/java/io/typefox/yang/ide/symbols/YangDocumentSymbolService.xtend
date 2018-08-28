@@ -56,11 +56,10 @@ class YangDocumentSymbolService extends DocumentSymbolService {
 	override getSymbols(XtextResource resource, CancelIndicator cancelIndicator) {
 		val result = newArrayList
 		val module = resource.contents.head
-		if (!(module instanceof AbstractModule)) {
-			return Either.forLeft(result)
+		if (module instanceof AbstractModule) {
+			collectSymbols(module, null, result, cancelIndicator)
 		}
-		collectSymbols(module as AbstractModule, null, result, cancelIndicator)
-		return Either.forLeft(result)
+		return result.map[Either.forLeft(it)]
 	}
 	
 	def getKind(SchemaNode node) {
